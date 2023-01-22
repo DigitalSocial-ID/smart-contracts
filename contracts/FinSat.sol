@@ -13,17 +13,15 @@ contract FinSat is ERC721Enumerable, Ownable {
   uint256 public maxSupply = 99999999;
   uint256 public maxMintAmount = 1;
   bool public paused = false;
-  bool public revealed = false;
+  bool public revealed = true;
   string public notRevealedUri;
 
   constructor(
     string memory _name,
     string memory _symbol,
-    string memory _initBaseURI,
-    string memory _initNotRevealedUri
+    string memory _initBaseURI
   ) ERC721(_name, _symbol) {
     setBaseURI(_initBaseURI);
-    setNotRevealedURI(_initNotRevealedUri);
   }
 
   // internal
@@ -73,9 +71,6 @@ contract FinSat is ERC721Enumerable, Ownable {
       "ERC721Metadata: URI query for nonexistent token"
     );
     
-    if(revealed == false) {
-        return notRevealedUri;
-    }
 
     string memory currentBaseURI = _baseURI();
     return bytes(currentBaseURI).length > 0
@@ -96,9 +91,7 @@ contract FinSat is ERC721Enumerable, Ownable {
     maxMintAmount = _newmaxMintAmount;
   }
   
-  function setNotRevealedURI(string memory _notRevealedURI) public onlyOwner {
-    notRevealedUri = _notRevealedURI;
-  }
+
 
   function setBaseURI(string memory _newBaseURI) public onlyOwner {
     baseURI = _newBaseURI;
