@@ -9,7 +9,6 @@ contract FinSat is ERC721Enumerable, Ownable {
 
   string baseURI;
   string public baseExtension = ".json";
-  uint256 public cost = 0.0001 ether;
   uint256 public maxSupply = 99999999;
   uint256 public maxMintAmount = 1;
   bool public paused = false;
@@ -24,22 +23,19 @@ contract FinSat is ERC721Enumerable, Ownable {
     setBaseURI(_initBaseURI);
   }
 
+
   // internal
   function _baseURI() internal view virtual override returns (string memory) {
     return baseURI;
   }
 
   // public
-  function mint(uint256 _mintAmount) public payable {
+  function mint(uint256 _mintAmount) public onlyOwner {
     uint256 supply = totalSupply();
     require(!paused);
     require(_mintAmount > 0);
     require(_mintAmount <= maxMintAmount);
     require(supply + _mintAmount <= maxSupply);
-
-    if (msg.sender != owner()) {
-      require(msg.value >= cost * _mintAmount);
-    }
 
     for (uint256 i = 1; i <= _mintAmount; i++) {
       _safeMint(msg.sender, supply + i);
@@ -83,9 +79,7 @@ contract FinSat is ERC721Enumerable, Ownable {
       revealed = true;
   }
   
-  function setCost(uint256 _newCost) public onlyOwner {
-    cost = _newCost;
-  }
+
 
   function setmaxMintAmount(uint256 _newmaxMintAmount) public onlyOwner {
     maxMintAmount = _newmaxMintAmount;
